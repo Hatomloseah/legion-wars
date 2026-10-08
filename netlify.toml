@@ -1,0 +1,21 @@
+[images]
+  remote_images = ["https://source.unsplash.com/.*", "https://images.unsplash.com/.*", "https://ext.same-assets.com/.*", "https://ugc.same-assets.com/.*"]
+
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Secret scanning stays on. Public values (site URL, admin wallet, prize size) are skipped, and
+  # local env files are skipped because they hold the same values as the Netlify variables.
+  SECRETS_SCAN_OMIT_KEYS = "SITE_URL,ADMIN_WALLETS,HOURLY_PRIZE_SOL"
+  SECRETS_SCAN_OMIT_PATHS = ".env,.env.*,.same/*"
+
+# scheduled settle job (netlify/functions/settle.ts runs every minute on the published deploy)
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
